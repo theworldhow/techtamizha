@@ -1,8 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Image optimization settings
+  // Static export for Cloudflare Pages
+  output: "export",
+  
+  // Trailing slash for static hosting
+  trailingSlash: true,
+  
+  // Image optimization settings - use unoptimized for static export
   images: {
+    unoptimized: true,
     // Allow images from these domains
     remotePatterns: [
       {
@@ -26,37 +33,6 @@ const nextConfig: NextConfig = {
   experimental: {
     // Optimize package imports
     optimizePackageImports: ["@supabase/supabase-js"],
-  },
-  // Headers for security and caching
-  async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: [
-          {
-            key: "X-DNS-Prefetch-Control",
-            value: "on",
-          },
-          {
-            key: "X-Content-Type-Options",
-            value: "nosniff",
-          },
-          {
-            key: "Referrer-Policy",
-            value: "origin-when-cross-origin",
-          },
-        ],
-      },
-      {
-        source: "/images/(.*)",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
-    ];
   },
 };
 
