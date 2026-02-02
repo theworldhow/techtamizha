@@ -84,7 +84,11 @@ export async function getVideoCategories(): Promise<string[]> {
     return [];
   }
 
-  const categories = new Set(data?.map((v) => v.category) || []);
+  if (!data || !Array.isArray(data)) {
+    return [];
+  }
+
+  const categories = new Set(data.map((v: { category: string }) => v.category));
   return Array.from(categories).sort();
 }
 
@@ -169,7 +173,11 @@ export async function getAllArticleSlugs(): Promise<string[]> {
     return [];
   }
 
-  return data?.map((a) => a.slug) || [];
+  if (!data || !Array.isArray(data)) {
+    return [];
+  }
+
+  return data.map((a: { slug: string }) => a.slug);
 }
 
 export async function getArticleTags(): Promise<string[]> {
@@ -184,8 +192,12 @@ export async function getArticleTags(): Promise<string[]> {
     return [];
   }
 
+  if (!data || !Array.isArray(data)) {
+    return [];
+  }
+
   const tagsSet = new Set<string>();
-  data?.forEach((article) => {
+  data.forEach((article: { tags?: string[] }) => {
     article.tags?.forEach((tag: string) => tagsSet.add(tag));
   });
 
@@ -204,7 +216,11 @@ export async function getArticleCategories(): Promise<string[]> {
     return [];
   }
 
-  const categories = new Set(data?.map((a) => a.category) || []);
+  if (!data || !Array.isArray(data)) {
+    return [];
+  }
+
+  const categories = new Set(data.map((a: { category: string }) => a.category));
   return Array.from(categories).sort();
 }
 
@@ -250,8 +266,12 @@ export async function getProducts(options?: {
     return [];
   }
 
+  if (!data || !Array.isArray(data)) {
+    return [];
+  }
+
   // Parse cta_buttons from JSONB
-  return (data || []).map((product) => ({
+  return data.map((product: Product) => ({
     ...product,
     cta_buttons: product.cta_buttons || [],
   }));
@@ -289,7 +309,11 @@ export async function getProductCategories(): Promise<string[]> {
     return [];
   }
 
-  const categories = new Set(data?.map((p) => p.category) || []);
+  if (!data || !Array.isArray(data)) {
+    return [];
+  }
+
+  const categories = new Set(data.map((p: { category: string }) => p.category));
   return Array.from(categories).sort();
 }
 

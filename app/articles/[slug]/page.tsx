@@ -27,7 +27,7 @@ async function getArticle(slug: string) {
 }
 
 // Get all article slugs for static generation
-async function getAllSlugs() {
+async function getAllSlugs(): Promise<string[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("articles")
@@ -39,7 +39,11 @@ async function getAllSlugs() {
     return [];
   }
 
-  return data?.map((a) => a.slug) || [];
+  if (!data || !Array.isArray(data)) {
+    return [];
+  }
+
+  return data.map((a: { slug: string }) => a.slug);
 }
 
 export async function generateStaticParams() {

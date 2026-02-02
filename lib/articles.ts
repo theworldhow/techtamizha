@@ -57,7 +57,11 @@ export async function getArticlesAsync(): Promise<ArticlePreview[]> {
     return [];
   }
 
-  return data || [];
+  if (!data || !Array.isArray(data)) {
+    return [];
+  }
+
+  return data as ArticlePreview[];
 }
 
 export async function getArticleBySlugAsync(
@@ -91,8 +95,12 @@ export async function getAllTagsAsync(): Promise<string[]> {
     return [];
   }
 
+  if (!data || !Array.isArray(data)) {
+    return [];
+  }
+
   const tagsSet = new Set<string>();
-  data?.forEach((article) => {
+  data.forEach((article: { tags?: string[] }) => {
     article.tags?.forEach((tag: string) => tagsSet.add(tag));
   });
 
