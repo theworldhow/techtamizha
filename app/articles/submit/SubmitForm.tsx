@@ -2,6 +2,12 @@
 
 import { useState, FormEvent } from "react";
 import Link from "next/link";
+import emailjs from "@emailjs/browser";
+
+// EmailJS Configuration - Get these from https://www.emailjs.com/
+const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "";
+const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_ARTICLE_TEMPLATE_ID || "";
+const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "";
 
 interface FormData {
   name: string;
@@ -55,8 +61,9 @@ export default function SubmitForm() {
       return;
     }
 
-    try {
-      // Create mailto link with form data
+    // Check if EmailJS is configured
+    if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
+      // Fallback to mailto if EmailJS is not configured
       const subject = encodeURIComponent(
         `Article Idea Submission: ${formData.topic}`
       );
@@ -67,17 +74,32 @@ export default function SubmitForm() {
           `Topic: ${formData.topic}\n\n` +
           `Description:\n${formData.description}`
       );
-
-      // Open default email client
       window.location.href = `mailto:ashokin2film@gmail.com?subject=${subject}&body=${body}`;
+      setSubmitted(true);
+      setIsSubmitting(false);
+      return;
+    }
 
-      // Show success state
-      setTimeout(() => {
-        setSubmitted(true);
-        setIsSubmitting(false);
-      }, 500);
-    } catch {
-      setError("Something went wrong. Please try again.");
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          category: formData.category,
+          topic: formData.topic,
+          description: formData.description || "No description provided",
+          to_email: "ashokin2film@gmail.com",
+        },
+        EMAILJS_PUBLIC_KEY
+      );
+
+      setSubmitted(true);
+      setIsSubmitting(false);
+    } catch (err) {
+      console.error("EmailJS error:", err);
+      setError("Failed to send. Please try again or email us directly.");
       setIsSubmitting(false);
     }
   };
@@ -104,8 +126,8 @@ export default function SubmitForm() {
           Thank You for Your Submission!
         </h2>
         <p className="mt-2 text-gray-400">
-          Your email client should have opened with your article idea. If it
-          didn&apos;t, please send your idea directly to{" "}
+          We&apos;ve received your article idea and will review it soon. If you have
+          any questions, feel free to contact us at{" "}
           <a
             href="mailto:ashokin2film@gmail.com"
             className="text-red-400 hover:underline"

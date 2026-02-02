@@ -1,6 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
+
+// EmailJS Configuration - Get these from https://www.emailjs.com/
+const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "";
+const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_CONTACT_TEMPLATE_ID || "";
+const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "";
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -10,24 +16,46 @@ export default function ContactForm() {
     message: "",
   });
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("submitting");
+    setErrorMessage("");
 
-    // Simulate form submission - replace with actual API call
-    try {
-      // For now, we'll use mailto as a fallback
+    // Check if EmailJS is configured
+    if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
+      // Fallback to mailto if EmailJS is not configured
       const subject = encodeURIComponent(`Feedback: ${formData.subject}`);
       const body = encodeURIComponent(
         `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
       );
       window.location.href = `mailto:ashokin2film@gmail.com?subject=${subject}&body=${body}`;
-      
       setStatus("success");
       setFormData({ name: "", email: "", subject: "", message: "" });
-    } catch {
+      return;
+    }
+
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          to_email: "ashokin2film@gmail.com",
+        },
+        EMAILJS_PUBLIC_KEY
+      );
+
+      setStatus("success");
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    } catch (error) {
+      console.error("EmailJS error:", error);
       setStatus("error");
+      setErrorMessage("Failed to send message. Please try again or email us directly.");
     }
   };
 
@@ -271,7 +299,7 @@ export default function ContactForm() {
                     className="rounded-lg bg-red-500/20 p-3 text-sm text-red-400"
                     role="alert"
                   >
-                    Something went wrong. Please try again.
+                    {errorMessage || "Something went wrong. Please try again."}
                   </div>
                 )}
 
