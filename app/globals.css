@@ -1,8 +1,36 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
+/* Modern Dark Theme Colors */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fafafa;
+  --foreground: #0a0a0a;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --card: #ffffff;
+  --card-foreground: #0a0a0a;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --primary: #dc2626;
+  --primary-foreground: #ffffff;
+  --accent: #f43f5e;
+  --accent-secondary: #8b5cf6;
+}
+
+/* Futuristic Dark Theme */
+.dark {
+  --background: #050505;
+  --foreground: #fafafa;
+  --muted: #18181b;
+  --muted-foreground: #a1a1aa;
+  --card: #0c0c0c;
+  --card-foreground: #fafafa;
+  --border: #27272a;
+  --input: #27272a;
+  --primary: #ef4444;
+  --primary-foreground: #ffffff;
+  --accent: #f43f5e;
+  --accent-secondary: #8b5cf6;
 }
 
 @theme inline {
@@ -12,15 +40,349 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Base body styles */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* ================================================
+   DARK THEME BACKGROUNDS
+   ================================================ */
+
+/* Main dark background with animated gradient mesh */
+.dark body,
+.dark .bg-\[\#0a0a0a\] {
+  background-color: #050505;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(239, 68, 68, 0.12) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.06) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.06) 0px, transparent 50%);
+  background-attachment: fixed;
+}
+
+.dark .bg-\[\#111111\] {
+  background-color: rgba(12, 12, 12, 0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Futuristic grid pattern overlay */
+.bg-dark-grid {
+  position: relative;
+  background-color: #050505;
+}
+
+.bg-dark-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Hero section with animated glow */
+.bg-dark-glow {
+  position: relative;
+  background: linear-gradient(180deg, #050505 0%, #0a0a0a 50%, #050505 100%);
+  overflow: hidden;
+}
+
+.bg-dark-glow::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(239, 68, 68, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 70% 60%, rgba(139, 92, 246, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 50% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 40%);
+  animation: slowPulse 15s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.bg-dark-glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: linear-gradient(to bottom, black, transparent);
+  pointer-events: none;
+}
+
+@keyframes slowPulse {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-5%, 5%) scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+/* Glassmorphism card effect */
+.dark .bg-gray-900\/50 {
+  background: rgba(15, 15, 15, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Subtle noise texture overlay */
+.dark body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.015;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ================================================
+   LIGHT THEME BACKGROUNDS
+   ================================================ */
+
+:root:not(.dark) {
+  color-scheme: light;
+}
+
+:root:not(.dark) body,
+:root:not(.dark) .bg-\[\#0a0a0a\] {
+  background-color: #fafafa;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(239, 68, 68, 0.04) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.03) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.02) 0px, transparent 50%);
+  background-attachment: fixed;
+}
+
+:root:not(.dark) .bg-\[\#111111\] {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+:root:not(.dark) .bg-dark-grid {
+  background-color: #fafafa;
+}
+
+:root:not(.dark) .bg-dark-grid::before {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+}
+
+:root:not(.dark) .bg-dark-glow {
+  background: linear-gradient(180deg, #ffffff 0%, #fafafa 50%, #ffffff 100%);
+}
+
+:root:not(.dark) .bg-dark-glow::before {
+  background:
+    radial-gradient(circle at 30% 20%, rgba(239, 68, 68, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 70% 60%, rgba(139, 92, 246, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 50% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 40%);
+}
+
+:root:not(.dark) .bg-dark-glow::after {
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+}
+
+:root:not(.dark) .bg-gray-900\/50 {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+:root:not(.dark) body::after {
+  opacity: 0.008;
+}
+
+/* Light theme text overrides */
+:root:not(.dark) .border-gray-800 {
+  border-color: #e4e4e7;
+}
+
+:root:not(.dark) .border-gray-700 {
+  border-color: #d4d4d8;
+}
+
+:root:not(.dark) .text-white {
+  color: #0a0a0a;
+}
+
+:root:not(.dark) .text-gray-300 {
+  color: #52525b;
+}
+
+:root:not(.dark) .text-gray-400 {
+  color: #71717a;
+}
+
+:root:not(.dark) .text-gray-500 {
+  color: #a1a1aa;
+}
+
+/* ================================================
+   MODERN UI ENHANCEMENTS
+   ================================================ */
+
+/* Glowing border effect on hover */
+.glow-border {
+  position: relative;
+}
+
+.glow-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(135deg, var(--primary), var(--accent-secondary), var(--accent));
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+  filter: blur(8px);
+}
+
+.glow-border:hover::before {
+  opacity: 0.5;
+}
+
+/* Animated gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary), var(--accent), var(--accent-secondary));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 5s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Floating animation for decorative elements */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Shimmer effect for loading states */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* ================================================
+   ACCESSIBILITY
+   ================================================ */
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Skip to main content link */
+.skip-to-main {
+  position: absolute;
+  left: -9999px;
+  z-index: 999;
+  padding: 1rem;
+  background: var(--primary);
+  color: white;
+  text-decoration: none;
+}
+
+.skip-to-main:focus {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .bg-dark-glow::before {
+    animation: none !important;
+  }
+}
+
+/* ================================================
+   SCROLLBAR STYLING
+   ================================================ */
+
+/* Custom scrollbar for dark theme */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* Custom scrollbar for light theme */
+:root:not(.dark) ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+:root:not(.dark) ::-webkit-scrollbar-track {
+  background: #fafafa;
+}
+
+:root:not(.dark) ::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
+  border-radius: 4px;
+}
+
+:root:not(.dark) ::-webkit-scrollbar-thumb:hover {
+  background: #a1a1aa;
 }
