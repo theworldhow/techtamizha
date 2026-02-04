@@ -22,6 +22,11 @@ const nextConfig: NextConfig = {
         hostname: "i.ytimg.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
+        pathname: "/storage/**",
+      },
     ],
     // Image formats for optimization
     formats: ["image/avif", "image/webp"],

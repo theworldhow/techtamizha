@@ -192,6 +192,28 @@ DELETE FROM articles WHERE slug = 'my-article-slug';
 
 ---
 
+## 🖼️ Uploading Images (for Products)
+
+### Using Supabase Storage (Recommended)
+
+1. Go to **Supabase Dashboard** → **Storage**
+2. Create a bucket called `product-images` (make it **Public**)
+3. Upload your image files
+4. Click on the uploaded file → **Copy URL**
+5. Use that URL in the `image_url` field
+
+**Example URL format:**
+```
+https://YOUR_PROJECT_ID.supabase.co/storage/v1/object/public/product-images/my-image.png
+```
+
+### Alternative Options
+
+- **External URLs**: You can use images from any public URL (Unsplash, official product websites, etc.)
+- **Public folder**: Add images to `/public/images/` in your code (requires redeployment)
+
+---
+
 ## 🛍️ Products Table
 
 ### Table Structure
